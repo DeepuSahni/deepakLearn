@@ -6,4 +6,5 @@ package main.encode;
  * Encoder service should take one number or whole file/list and return encoded words.
  */
 public class EncodeService {
+    public static final String PHONE_NUMBER_REGEX = "[-.( ]*[0-9]+[-,\\.() ]*";
 }
