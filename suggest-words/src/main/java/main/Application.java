@@ -1,7 +1,5 @@
 package main;
 
-import main.interact.StandardInputReader;
-
 /**
  * Entry point of application
  *
@@ -25,6 +23,12 @@ public class Application {
         for (String arg : args) {
             System.out.println("Passed arguments: " + arg);
         }
+        System.out.println("*" + System.getProperty("dictionary"));
 
+        runApplication(args);
+
+    }
+
+    private static void runApplication(final String[] args) {
     }
 }
