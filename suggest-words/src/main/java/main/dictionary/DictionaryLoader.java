@@ -9,13 +9,17 @@ import java.util.stream.Stream;
 /**
  * Store user supplied and default dictionaries here
  */
-public class Dictionary {
-    public static final String DEFAULT_DICTIONARY = "defaultDictionary.txt";
-    public static final String DICTIONARY_OPTION = "dictionary";
+public class DictionaryLoader {
+    private static final String DEFAULT_DICTIONARY = "defaultDictionary.txt";
+    private static final String DICTIONARY_OPTION = "dictionary";
+
+    private DictionaryLoader() {
+    }
+
 
     public static Stream<String> getDictionary() {
         try {
-            return Files.lines(Paths.get(Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).orElseGet(Dictionary::getDefaultDictionaryPath)));
+            return Files.lines(Paths.get(Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).orElseGet(DictionaryLoader::getDefaultDictionaryPath)));
         } catch (IOException ex) {
             System.out.println("Error: Cannot find dictionary file." + ex.getMessage());
             return Stream.empty();
@@ -23,7 +27,7 @@ public class Dictionary {
     }
 
     public static String getDefaultDictionaryPath() {
-            return Dictionary.class.getClassLoader().getResource(DEFAULT_DICTIONARY).getPath();
+            return DictionaryLoader.class.getClassLoader().getResource(DEFAULT_DICTIONARY).getPath();
     }
 
 }

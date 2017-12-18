@@ -1,5 +1,7 @@
 package main.util;
 
+import java.util.List;
+
 public class Util {
     public static boolean isEmpty(String[] array){
         if (array !=null && array.length > 0) {
@@ -34,4 +36,15 @@ public class Util {
             return true;
         }
     }
+    public static boolean isEmpty(final List<String> list){
+        if (list !=null && list.size() > 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isNotEmpty(final List<String> list){
+        return ! (isEmpty(list));
+    }
+
 }
