@@ -2,8 +2,6 @@ package main.encode;
 
 import co.unruly.matchers.StreamMatchers;
 
-import main.dictionary.DictionaryLoader;
-import main.dictionary.DictionaryLoaderTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

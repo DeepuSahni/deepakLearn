@@ -1,5 +1,7 @@
 package main.dictionary;
 
+import main.util.Util;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,7 +21,10 @@ public class DictionaryLoader {
 
     public static Stream<String> getDictionary() {
         try {
-            return Files.lines(Paths.get(Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).orElseGet(DictionaryLoader::getDefaultDictionaryPath)));
+            return Files.lines(Paths.get(Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).orElseGet(DictionaryLoader::getDefaultDictionaryPath)))
+                    .map (word -> word.toUpperCase())
+                    .distinct()
+                    .map(word -> word.concat(word.replaceAll(Util.NOT_NUMBER_REGEX, "")));
         } catch (IOException ex) {
             System.out.println("Error: Cannot find dictionary file." + ex.getMessage());
             return Stream.empty();

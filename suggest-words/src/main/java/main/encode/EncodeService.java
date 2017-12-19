@@ -29,7 +29,7 @@ public class EncodeService {
 
     public Stream<String> encode(final String phoneNumber) {
          if (!Util.isBlank(phoneNumber)) {
-             List<List<String>> allDigitsMappedToLetters = this.mapDigitsToLetters(phoneNumber);
+             List<List<String>> allDigitsMappedToLetters = this.mapDigitsToLetters(phoneNumber.replaceAll(Util.NOT_NUMBER_REGEX, ""));
              if (allDigitsMappedToLetters != null && allDigitsMappedToLetters.size() > 0) {
                  if (allDigitsMappedToLetters.size() == 1) {
                      return allDigitsMappedToLetters.get(0).stream();

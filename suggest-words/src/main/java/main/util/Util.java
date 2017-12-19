@@ -3,6 +3,11 @@ package main.util;
 import java.util.List;
 
 public class Util {
+    private Util() {
+
+    }
+
+    public static final String NOT_NUMBER_REGEX = "[^0-9]+";
     public static boolean isEmpty(String[] array){
         if (array !=null && array.length > 0) {
             return false;
