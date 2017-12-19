@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -18,13 +21,16 @@ public class DictionaryLoader {
     private DictionaryLoader() {
     }
 
+    public static Set<String> getDictionary() {
+        return new TreeSet(DictionaryLoader.loadUserDictionaryOrDefault().collect(Collectors.toSet()));
+    }
 
-    public static Stream<String> getDictionary() {
+    public static Stream<String> loadUserDictionaryOrDefault() {
         try {
             return Files.lines(Paths.get(Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).orElseGet(DictionaryLoader::getDefaultDictionaryPath)))
                     .map (word -> word.toUpperCase())
                     .distinct()
-                    .map(word -> word.concat(word.replaceAll(Util.NOT_NUMBER_REGEX, "")));
+                    .map(word -> word.replaceAll(Util.UPPER_CASE_LETTER_REGEX, ""));
         } catch (IOException ex) {
             System.out.println("Error: Cannot find dictionary file." + ex.getMessage());
             return Stream.empty();

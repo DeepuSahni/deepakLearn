@@ -4,10 +4,10 @@ import java.util.List;
 
 public class Util {
     private Util() {
-
     }
 
     public static final String NOT_NUMBER_REGEX = "[^0-9]+";
+    public static final String UPPER_CASE_LETTER_REGEX = "[^A-Z]+";
     public static boolean isEmpty(String[] array){
         if (array !=null && array.length > 0) {
             return false;

@@ -11,13 +11,13 @@ import static org.testng.Assert.assertEquals;
 public class DictionaryLoaderTest {
     public static final String USER_DICTIONARY = "userDictionary.txt";
     public void given_noDictionaryOption_when_getDictionary_then_loadDefaultDictionary() {
-        Stream<String> dictionary = DictionaryLoader.getDictionary();
-        assertEquals(dictionary.count(), 234371);
+        assertEquals(DictionaryLoader.getDictionary().size(), 234371);
     }
 
     public void given_userDictionaryOption_when_getDictionary_then_loadUserDictionary() {
         System.setProperty("dictionary", USER_DICTIONARY);
-        Stream<String> dictionary = DictionaryLoader.getDictionary();
-        assertEquals(dictionary.count(), 49637);
+        assertEquals(DictionaryLoader.getDictionary().size(), 49637);
+        System.clearProperty("dictionary");
     }
+
 }

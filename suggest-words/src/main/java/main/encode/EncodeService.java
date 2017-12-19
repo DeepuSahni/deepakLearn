@@ -1,10 +1,8 @@
 package main.encode;
 
-import main.dictionary.DictionaryLoader;
 import main.util.Util;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -35,7 +33,7 @@ public class EncodeService {
                      return allDigitsMappedToLetters.get(0).stream();
                  }
                  List<String> base = new ArrayList<>();
-                 // initialize base, we will go through <code>allDigitsMappedToLetters</code> from top to bottom.
+                 // initialize base, Go through <code>allDigitsMappedToLetters</code> from top to bottom; Add each letter from next letter set to the base letter set.
                  base.addAll(allDigitsMappedToLetters.get(0));
 
                  List<String> intermediate = new ArrayList<>();
@@ -58,10 +56,10 @@ public class EncodeService {
     }
 
     /**
-     * 1. For each digit of phone number, look into <code>encodingMap</code> to find matching letters.
-     * 2. If matching set of letters is found then check if each letter is present in dictionary.
-     * 3. If letter is found in dictionary add it to list of mapped letters.
-     * 4. If letters cannot be find in dictionary for a digit, it can remain unchanged but no 2 consecutive digits can remain unchanged.
+     * 1. For each digit of phone number, look into <code>encodingMap</code> to find matching letter set.
+     * 2. If matching set of letters is found then add that to the result.
+     * 3. If NO set of letter is found in then add that digit as it is to result
+     * 4. NO two consecutive digits can remain unchanged.
      * @param phoneNumber
      * @return all digits changed to letters or null if 2 consecutive digits could not be changed.
      */
@@ -71,21 +69,16 @@ public class EncodeService {
         for (char digit : phoneNumber.toCharArray()) {
             String[] lettersForNumber = encodingMap.get(String.valueOf(digit));
             if (lettersForNumber != null) {
-                List<String> lettersFoundInDictionary = Arrays.stream(lettersForNumber).map(letter -> DictionaryLoader.getDictionary()
-                        .anyMatch(dictionaryWord -> dictionaryWord.equalsIgnoreCase(letter)) ? letter : "")
-                        .filter(letter -> letter.length() > 0).collect(Collectors.toList());
-                if (lettersFoundInDictionary.size() > 0) {
-                    previousDigitIgnored = false;
-                    allDigitsMappedToLetters.add(lettersFoundInDictionary);
+                previousDigitIgnored = false;
+                allDigitsMappedToLetters.add(Arrays.asList(lettersForNumber));
+            }
+            else {
+                if(previousDigitIgnored) {
+                    return null;
                 }
-                else {
-                    if(previousDigitIgnored) {
-                        return null;
-                    }
-                    previousDigitIgnored = true;
-                    // 1 digit can stay un-changed.
-                    allDigitsMappedToLetters.add(Arrays.asList(String.valueOf(digit)));
-                }
+                previousDigitIgnored = true;
+                // 1 digit can stay un-changed.
+                allDigitsMappedToLetters.add(Arrays.asList(String.valueOf(digit)));
             }
         }
         return allDigitsMappedToLetters;
