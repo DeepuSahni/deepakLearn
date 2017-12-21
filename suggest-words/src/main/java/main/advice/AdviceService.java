@@ -14,13 +14,8 @@ public class AdviceService {
     AdviceService() {
     }
 
-    AdviceService(Set<String> dictionary) {
+    public AdviceService(Set<String> dictionary) {
         this.dictionary = dictionary;
-    }
-
-    public static void main(String[] args) {
-        AdviceService adviceService = new AdviceService(DictionaryLoader.getDictionary());
-        adviceService.getSuggestionsForWord("CALLMENOWSAM");
     }
 
     public List<String> getSuggestionsForWord(final String word) {
