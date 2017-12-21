@@ -32,28 +32,33 @@ public class EncodeService {
                  if (allDigitsMappedToLetters.size() == 1) {
                      return allDigitsMappedToLetters.get(0).stream();
                  }
-                 List<String> base = new ArrayList<>();
-                 // initialize base, Go through <code>allDigitsMappedToLetters</code> from top to bottom; Add each letter from next letter set to the base letter set.
-                 base.addAll(allDigitsMappedToLetters.get(0));
-
-                 List<String> intermediate = new ArrayList<>();
-                 for (List<String> encodedDigitSet : allDigitsMappedToLetters.subList(1, allDigitsMappedToLetters.size())) {
-                     for (int index = 0; encodedDigitSet!=null && index < encodedDigitSet.size(); index++) {
-                         for (String baseLetterSet : base) {
-                             intermediate.add(baseLetterSet.concat(encodedDigitSet.get(index)));
-                         }
-                     }
-                     if (intermediate.size() > 0) {
-                         base.clear();
-                         base.addAll(intermediate);
-                         intermediate.clear();
-                     }
-                 }
-                 return base.stream();
+                 return getCartesianProduct(allDigitsMappedToLetters).stream();
              }
          }
          return Stream.empty();
     }
+
+
+    private List<String> getCartesianProduct(List<List<String>> parentList ) {
+        List<String> base = new LinkedList<>();
+        base.addAll(parentList.get(0));
+
+        List<String> intermediate = new LinkedList<>();
+        for (List<String> memberList : parentList.subList(1, parentList.size())) {
+            for (int index = 0; memberList!=null && index < memberList.size(); index++) {
+                for (String baseMember : base) {
+                    intermediate.add(baseMember.concat(memberList.get(index)));
+                }
+            }
+            if (intermediate.size() > 0) {
+                base.clear();
+                base.addAll(intermediate);
+                intermediate.clear();
+            }
+        }
+        return base;
+    }
+
 
     /**
      * 1. For each digit of phone number, look into <code>encodingMap</code> to find matching letter set.
@@ -64,13 +69,13 @@ public class EncodeService {
      * @return all digits changed to letters or null if 2 consecutive digits could not be changed.
      */
     private List<List<String>> mapDigitsToLetters(final String phoneNumber) {
-        List<List<String>> allDigitsMappedToLetters = new ArrayList<>();
+        List<List<String>> allDigitsMappedToLetters = new LinkedList<>();
         boolean previousDigitIgnored = false;
         for (char digit : phoneNumber.toCharArray()) {
             String[] lettersForNumber = encodingMap.get(String.valueOf(digit));
             if (lettersForNumber != null) {
                 previousDigitIgnored = false;
-                allDigitsMappedToLetters.add(Arrays.asList(lettersForNumber));
+                allDigitsMappedToLetters.add(new LinkedList<>(Arrays.asList(lettersForNumber)));
             }
             else {
                 if(previousDigitIgnored) {
@@ -78,7 +83,7 @@ public class EncodeService {
                 }
                 previousDigitIgnored = true;
                 // 1 digit can stay un-changed.
-                allDigitsMappedToLetters.add(Arrays.asList(String.valueOf(digit)));
+                allDigitsMappedToLetters.add(new LinkedList<>(Arrays.asList(String.valueOf(digit))));
             }
         }
         return allDigitsMappedToLetters;

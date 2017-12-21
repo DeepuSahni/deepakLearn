@@ -4574,8 +4574,6 @@ akuammine
 akule
 akund
 Akwapim
-Al
-al
 ala
 Alabama
 Alabaman
@@ -61419,7 +61417,6 @@ Emydinae
 Emydosauria
 emydosaurian
 Emys
-en
 enable
 enablement
 enabler
@@ -122862,7 +122859,6 @@ Nazirate
 Nazirite
 Naziritic
 Nazism
-ne
 nea
 Neal
 neal
@@ -124128,7 +124124,6 @@ neutrophilous
 Nevada
 Nevadan
 nevadite
-neve
 nevel
 never
 neverland

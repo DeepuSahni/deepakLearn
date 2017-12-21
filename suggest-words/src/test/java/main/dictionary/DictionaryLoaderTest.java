@@ -11,7 +11,7 @@ import static org.testng.Assert.assertEquals;
 public class DictionaryLoaderTest {
     public static final String USER_DICTIONARY = "userDictionary.txt";
     public void given_noDictionaryOption_when_getDictionary_then_loadDefaultDictionary() {
-        assertEquals(DictionaryLoader.getDictionary().size(), 234371);
+        assertEquals(DictionaryLoader.getDictionary().size(), 234367);
     }
 
     public void given_userDictionaryOption_when_getDictionary_then_loadUserDictionary() {
