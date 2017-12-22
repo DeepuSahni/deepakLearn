@@ -1,5 +1,6 @@
-package main
+package main;
 
 
 class ApplicationTest {
+
 }

@@ -32,14 +32,15 @@ public class EncodeServiceTest {
         Stream<String> encodedStream = service.encode("111.111");
         Assert.assertEquals(encodedStream.count(), 0);
     }
+
     public void given_oneDigitNotInEncodingDictionary_when_encode_then_ChangeTheRest() {
         Stream<String> encodedStream = service.encode("212");
-        assertThat(encodedStream, StreamMatchers.contains("A1A","B1A","C1A","A1B","B1B","C1B","A1C","B1C","C1C"));
+        assertThat(encodedStream, StreamMatchers.contains("A1A", "B1A", "C1A", "A1B", "B1B", "C1B", "A1C", "B1C", "C1C"));
     }
 
     public void given_someDigitsNotInEncodingDictionary_when_encode_then_ChangeTheRest() {
         Stream<String> encodedStream = service.encode("2121");
-        assertThat(encodedStream, StreamMatchers.contains("A1A1","B1A1","C1A1","A1B1","B1B1","C1B1","A1C1","B1C1","C1C1"));
+        assertThat(encodedStream, StreamMatchers.contains("A1A1", "B1A1", "C1A1", "A1B1", "B1B1", "C1B1", "A1C1", "B1C1", "C1C1"));
     }
 
     public void given_consecutiveDigitsNotInEncodingDictionary_when_encode_then_IgnoreNumber() {
