@@ -16,17 +16,15 @@ public class Result {
 
     public void showResults(final EncodeService encodeService, final AdviceService adviceService) {
         suggestion.append(phoneNumber).append(Util.COMMA_SEPARATOR);
-        encodeService.encode(phoneNumber).forEach(encodedNumber -> printSuggestions(encodedNumber, adviceService));
+        encodeService.encode(phoneNumber).filter(encodedNumber -> encodedNumber.length() > 0).forEach(encodedNumber -> printSuggestions(encodedNumber, adviceService));
         System.out.println(suggestion.toString());
     }
 
-    private void printSuggestions(final String encodedNumber, AdviceService adviceService) {
-        if (Util.isNotEmpty(encodedNumber)) {
+    private void printSuggestions(final String encodedNumber, final AdviceService adviceService) {
             List<String> results = adviceService.getSuggestionsForWord(encodedNumber);
             if (results.size() > 0) {
                 suggestion.append(results.toString());
             }
-        }
     }
 
     public String getPhoneNumber() {

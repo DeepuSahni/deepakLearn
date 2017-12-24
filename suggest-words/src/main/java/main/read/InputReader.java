@@ -43,7 +43,7 @@ public class InputReader {
         return result;
     }
 
-     public void processStandardInput(EncodeService encode, AdviceService advice, InputStream inputStream)  {
+     public void processStandardInput(final EncodeService encode, final AdviceService advice, final InputStream inputStream)  {
         Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
 
         System.out.println(" ###### We are here to suggest! ######");

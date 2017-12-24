@@ -25,7 +25,7 @@ public class ArgumentParser {
         return Arrays.stream(args).map(String::trim).filter(VALID_FILE_NAME);
     }
 
-    public static boolean isValidFileName(String arg) {
+    public static boolean isValidFileName(final String arg) {
         if (arg.matches(FILE_REGEX)) {
             return true;
         }

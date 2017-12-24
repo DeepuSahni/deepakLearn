@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * For example 225563 will have 700+ word encodings.
  */
 public class EncodeService {
-     public static Map<String, String[]> encodingMap;
+     private static final Map<String, String[]> encodingMap;
 
      static {
         encodingMap = new HashMap<>();
@@ -31,20 +31,24 @@ public class EncodeService {
     }
 
     public Stream<String> encode(final String phoneNumber) {
-         if (!Util.isBlank(phoneNumber)) {
-             List<List<String>> allDigitsMappedToLetters = this.mapDigitsToLetters(phoneNumber.replaceAll(Util.NOT_NUMBER_REGEX, ""));
-             if (allDigitsMappedToLetters != null && allDigitsMappedToLetters.size() > 0) {
-                 if (allDigitsMappedToLetters.size() == 1) {
-                     return allDigitsMappedToLetters.get(0).stream();
-                 }
-                 return getCartesianProduct(allDigitsMappedToLetters).stream();
-             }
+         if (Util.isBlank(phoneNumber)) {
+             return Stream.empty();
          }
-         return Stream.empty();
+         List<List<String>> allDigitsMappedToLetters = this.mapDigitsToLetters(phoneNumber.replaceAll(Util.NOT_NUMBER_REGEX, ""));
+
+         if (allDigitsMappedToLetters == null) {
+             return Stream.empty();
+         }
+         else if (allDigitsMappedToLetters.size() == 1) {
+                 return allDigitsMappedToLetters.get(0).stream();
+         }
+         else if (allDigitsMappedToLetters.size() > 1) {
+             return getCartesianProduct(allDigitsMappedToLetters).stream();
+         }
+        return Stream.empty();
     }
 
-
-    private List<String> getCartesianProduct(List<List<String>> parentList ) {
+    private List<String> getCartesianProduct(final List<List<String>> parentList ) {
         List<String> base = new LinkedList<>();
         base.addAll(parentList.get(0));
 

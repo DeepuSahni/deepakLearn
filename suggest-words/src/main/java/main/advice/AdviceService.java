@@ -51,8 +51,8 @@ public class AdviceService {
         return suggestions;
     }
 
-    private List<String> getValidSuggestions(String word, List<List<String>> wordBrokenIntoDictionaryWords) {
-        List<String> suggestions = new ArrayList<>();
+    private List<String> getValidSuggestions(final String word, final List<List<String>> wordBrokenIntoDictionaryWords) {
+        List<String> suggestions;
         if (word.matches(".*\\d+.*")) {
             // Re-Write the word using letters and numbers.
             List<String> baseLetterSet = new LinkedList<>();
@@ -90,7 +90,7 @@ public class AdviceService {
     }
 
 
-    private List<String> breakWordIntoDictionaryWords(String word) {
+    private List<String> breakWordIntoDictionaryWords(final String word) {
         if (word.length() < 2 || dictionary.contains(word)) {
             return new LinkedList<>(Arrays.asList(word));
         }
@@ -122,19 +122,19 @@ public class AdviceService {
         Map<Integer, List<String>> possibleWords = new HashMap<>();
         List<String> wordsForThisIndex;
         for (int i = 0; i < word.length() ; i++) {
-            for (int j = word.length(); j > i + 1; j--)
+            for (int j = word.length(); j > i + 1; j--) {
                 if (dictionary.contains(word.substring(i, j))) {
                     if (possibleWords.get(i) == null) {
                         wordsForThisIndex = new ArrayList<>();
                         wordsForThisIndex.add(word.substring(i, j));
                         possibleWords.put(i, wordsForThisIndex);
-                    }
-                    else {
+                    } else {
                         wordsForThisIndex = possibleWords.get(i);
                         wordsForThisIndex.add(word.substring(i, j));
                     }
 
                 }
+            }
         }
         return possibleWords;
     }
