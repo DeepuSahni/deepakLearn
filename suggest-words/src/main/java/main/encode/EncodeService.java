@@ -2,13 +2,18 @@ package main.encode;
 
 import main.util.Util;
 
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * Should take phone numbers and encode it into letters.
+ * Takes a phone number and encode the same into letters.
  * One phone number can have more than one encoded words for itself.
- * Encoder service should take one number or whole file/list and return encoded words.
+ * For example 225563 will have 700+ word encodings.
  */
 public class EncodeService {
      public static Map<String, String[]> encodingMap;

@@ -45,4 +45,9 @@ public class AdviceServiceTest{
         List<String> suggestionsForWord = adviceService.getSuggestionsForWord("AL");
         Assert.assertEquals(suggestionsForWord.size(), 0);
     }
+
+    public void given_NoDictionaryWordStartWithFirstLetter_when_getSuggestions_then_getNothing() {
+        List<String> suggestionsForWord = adviceService.getSuggestionsForWord("ZXLOVEME");
+        Assert.assertEquals(suggestionsForWord.size(), 0);
+    }
 }

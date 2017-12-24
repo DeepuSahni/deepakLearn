@@ -1,61 +1,73 @@
 package main.read;
 
-import co.unruly.matchers.StreamMatchers;
+import main.advice.AdviceService;
+import main.dictionary.DictionaryLoader;
+import main.encode.EncodeService;
 import main.util.Error;
-import org.mockito.*;
+
+import org.hamcrest.MatcherAssert;
+
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.testng.Assert.assertEquals;
 
 
 @Test
 public class InputReaderTest {
     @Mock
-    private InputStream inputStream;
-
     private InputReader inputReader;
 
     private static final String VALID_FILE = "testPhoneNumbers.txt";
 
+    private EncodeService encodeService;
+    private AdviceService adviceService;
+
+    List<String> expected =Arrays.asList("12345", "123-345", "(123)");
+
+    @BeforeClass
+    public void initialise() {
+        encodeService = new EncodeService();
+        adviceService = new AdviceService(DictionaryLoader.getDictionary());
+    }
+
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        inputReader = Mockito.spy(new InputReader(inputStream));
-    }
-
-    public void given_zeroFileArgs_when_process_then_readFromStandardInput() {
-        inputReader.readInput(Stream.empty());
-        Mockito.verify(inputReader, Mockito.times(1)).readUserInput();
-        Mockito.verify(inputReader, Mockito.times(0)).readFileInput(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
-    }
-
-    public void given_fileArgs_when_process_then_readFromFileInput() {
-        inputReader.readInput(Stream.of(VALID_FILE));
-        Mockito.verify(inputReader, Mockito.times(0)).readUserInput();
-        Mockito.verify(inputReader, Mockito.times(1)).readFileInput(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
+        inputReader = Mockito.spy(new InputReader());
     }
 
     public void given_validFileNameArg_when_process_then_returnsCorrectCountInFile() {
-        assertEquals(inputReader.readInput(Stream.of(VALID_FILE)).count(), 3);
+        assertEquals(inputReader.readFileInput(Stream.of(VALID_FILE)).size(), 3);
     }
 
     public void given_validFileNameArg_when_process_then_returnsSameNumbersInFile() {
-        Stream<String> allNumberStream = inputReader.readInput(Stream.of(VALID_FILE));
-        assertThat(allNumberStream, StreamMatchers.contains("12345","123-345","(123)"));
+        List<String> allNumbers = inputReader.readFileInput(Stream.of(VALID_FILE));
+        MatcherAssert.assertThat(allNumbers, containsInAnyOrder(expected.toArray()));
     }
 
-    public void given_nonExistentFile_when_process_then_returnsEmptyStream() {
-        Stream<String> allNumberStream = inputReader.readInput(Stream.of("NO_SUCH_FILE"));
-        Mockito.verify(inputReader, Mockito.times(0)).readUserInput();
-        Mockito.verify(inputReader, Mockito.times(1)).readFileInput(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
+    public void given_nonExistentFile_when_process_then_returnsNothing() {
+        List<String> allNumbers = inputReader.readFileInput(Stream.of("NO_SUCH_FILE"));
+        Mockito.verify(inputReader, Mockito.times(1)).readFromFile(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
         assertEquals(inputReader.getError(), Optional.of(Error.FILE_NOT_FOUND));
-        assertEquals(allNumberStream.count(), 0);
+        assertEquals(allNumbers.size(), 0);
+    }
+
+    public void given_mixedOfGoodBadFileArgs_when_process_then_readFromFileInput() {
+        List<String> allNumbers =  inputReader.readFileInput(Stream.of(VALID_FILE, "being sneaky"));
+        Mockito.verify(inputReader, Mockito.times(2)).readFromFile(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
+        MatcherAssert.assertThat(allNumbers, containsInAnyOrder(expected.toArray()));
     }
 }

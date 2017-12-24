@@ -1,5 +1,17 @@
 package main;
 
+import main.advice.AdviceService;
+import main.dictionary.DictionaryLoader;
+import main.encode.EncodeService;
+import main.parse.ArgumentParser;
+import main.read.InputReader;
+import main.result.ResultMapper;
+import main.util.Error;
+import main.util.Util;
+
+import java.util.List;
+import java.util.Set;
+
 /**
  * Entry point of application
  *
@@ -20,15 +32,35 @@ package main;
 public class Application {
 
     public static void main(String[] args) {
-        for (String arg : args) {
-            System.out.println("Passed arguments: " + arg);
-        }
-        System.out.println("*" + System.getProperty("dictionary"));
-
-        runApplication(args);
-
+        new Application().startApplication(args);
     }
 
-    private static void runApplication(final String[] args) {
+    public void startApplication(String[] args) {
+        Set<String> dictionary = DictionaryLoader.getDictionary();
+        if (dictionary.size() < 1) {
+            System.out.println(Error.DICTIONARY_NOT_FOUND.getText());
+        }
+        else {
+            runApplication(args, dictionary);
+        }
+    }
+
+
+    public void runApplication(final String[] args, final  Set<String> dictionary) {
+        AdviceService advice = new AdviceService(dictionary);
+        EncodeService encode = new EncodeService();
+        InputReader inputReader = new InputReader();
+        List<String> numbersInFiles = inputReader.readFileInput(ArgumentParser.parseArguments(args));
+
+        if (Util.isNotEmpty(numbersInFiles)) {
+            numbersInFiles.stream()
+                    .filter(number -> number.matches(Util.PHONE_NUMBER_REGEX))
+                    .map(new ResultMapper())
+                    .forEach(result -> result.showResults(encode, advice));
+        }
+        else if (!inputReader.getError().isPresent()){
+            inputReader.processStandardInput(encode, advice, System.in);
+        }
+
     }
 }

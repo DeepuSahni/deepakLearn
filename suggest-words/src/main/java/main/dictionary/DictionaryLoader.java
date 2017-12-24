@@ -1,5 +1,6 @@
 package main.dictionary;
 
+import main.util.Error;
 import main.util.Util;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Store user supplied and default dictionaries here
+ * Sets up user supplied or default dictionary.
  */
 public class DictionaryLoader {
     private static final String DEFAULT_DICTIONARY = "defaultDictionary.txt";
@@ -22,17 +23,18 @@ public class DictionaryLoader {
     }
 
     public static Set<String> getDictionary() {
-        return new TreeSet(DictionaryLoader.loadUserDictionaryOrDefault().collect(Collectors.toSet()));
+        return new TreeSet(DictionaryLoader.getDictionaryOrEmpty().collect(Collectors.toSet()));
     }
 
-    public static Stream<String> loadUserDictionaryOrDefault() {
+    public static Stream<String> getDictionaryOrEmpty() {
         try {
             return Files.lines(Paths.get(Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).orElseGet(DictionaryLoader::getDefaultDictionaryPath)))
                     .map (word -> word.toUpperCase())
                     .distinct()
-                    .map(word -> word.replaceAll(Util.UPPER_CASE_LETTER_REGEX, ""));
+                    .map(word -> word.replaceAll(Util.NOT_AN_UPPER_CASE_REGEX, ""))
+                    .filter(word -> word.length() > 0);
         } catch (IOException ex) {
-            System.out.println("Error: Cannot find dictionary file." + ex.getMessage());
+            System.out.println(Error.DICTIONARY_NOT_FOUND.getText() + ex.getMessage());
             return Stream.empty();
         }
     }

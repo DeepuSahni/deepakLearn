@@ -1,8 +1,16 @@
 package main.advice;
 
-import main.dictionary.DictionaryLoader;
+import main.util.Util;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +28,7 @@ public class AdviceService {
 
     public List<String> getSuggestionsForWord(final String word) {
         List<List<String>> wordBrokenIntoDictionaryWords = new ArrayList<>();
+        List<String> suggestions = new ArrayList<>();
         String[] splitWordWithNumbers = word.split("((?<=[0-9])|(?=[0-9]))");
 
         for (int i = 0; i < splitWordWithNumbers.length; i++) {
@@ -29,14 +38,17 @@ public class AdviceService {
             }
             else {
                 // Get dictionary words within a word.
-                wordBrokenIntoDictionaryWords.add(this.breakWordIntoDictionaryWords(splitWordWithNumbers[i]));
+                List<String> dictionaryWords = this.breakWordIntoDictionaryWords(splitWordWithNumbers[i]);
+                if (Util.isNotEmpty(dictionaryWords)){
+                    wordBrokenIntoDictionaryWords.add(dictionaryWords);
+                }
+
             }
         }
-        List<String> suggestions = this.getValidSuggestions(word, wordBrokenIntoDictionaryWords);
-
-        System.out.println(suggestions);
+        if (wordBrokenIntoDictionaryWords.size() > 0){
+            suggestions = this.getValidSuggestions(word, wordBrokenIntoDictionaryWords);
+        }
         return suggestions;
-
     }
 
     private List<String> getValidSuggestions(String word, List<List<String>> wordBrokenIntoDictionaryWords) {
@@ -79,7 +91,7 @@ public class AdviceService {
 
 
     private List<String> breakWordIntoDictionaryWords(String word) {
-        if (word == null || word.length() < 2 || dictionary.contains(word)) {
+        if (word.length() < 2 || dictionary.contains(word)) {
             return new LinkedList<>(Arrays.asList(word));
         }
 
@@ -101,8 +113,8 @@ public class AdviceService {
     }
 
     /**
-     * Staring from first letter in word we look for all possible words within this word.
-     * Example: CALLMENOW will return CALL, ALL, ME, MEN, NOW. (Assuming all these words are in the dictionary)
+     * Starting from first letter in word we look for all possible words within this word.
+     * Example: CALLMENOW will return CALL, ALL, ME, MEN, NOW.
      * @param word
      * @return All possible words within a word.
      */
@@ -135,6 +147,10 @@ public class AdviceService {
      */
     private List<String> reWriteWordFromAllPossibleWords(final String word, final Map<Integer, List<String>> allPossibleWords) {
         List<String> base = new ArrayList<>();
+        // Letter at first index must have a word starting with itself
+        if (allPossibleWords.get(0) == null) {
+            return base;
+        }
         base.addAll(allPossibleWords.get(0));
         List<String> intermediate = new ArrayList<>();
 

@@ -2,8 +2,10 @@ package main.util;
 
 public enum Error {
 
-    FILE_NOT_FOUND("Error: Cannot find file : "),
-    BAD_PHONE_NUMBER("Error: Invalid phone number");
+    FILE_NOT_FOUND("Error: Cannot find file(s) : "),
+    BAD_PHONE_NUMBER("Error: Invalid phone number."),
+    DICTIONARY_NOT_FOUND(" Error: Dictionary Not Found."),
+    BAD_FILE_NAME("Error: Invalid file name,.");
     private String text;
 
     private Error(String text) {

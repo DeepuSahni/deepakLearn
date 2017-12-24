@@ -1,30 +1,37 @@
 package main.read;
 
+import main.advice.AdviceService;
+import main.encode.EncodeService;
+import main.result.ResultMapper;
 import main.util.Error;
+import main.util.Util;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * If valid files are supplied as arguments we will read from them.
+ * If no file args is supplied then we will read from standard input.
+ */
 public class InputReader {
-    private InputStream inputStream;
     private Optional<Error> error = Optional.ofNullable(null);
 
     public InputReader() {
     }
 
-    public InputReader(InputStream inputStream) {
-        this.inputStream = inputStream;
-    }
-
-    public Stream<String> readInput(final Stream<String> args) {
+    public List<String> readFileInput(final Stream<String> args) {
         List<Stream<String>> allNumbers = new ArrayList<>();
-        args.forEach(arg -> this.readFileInput(arg, allNumbers));
+        args.forEach(arg -> this.readFromFile(arg, allNumbers));
         List<String> result = new ArrayList<>();
 
         if (allNumbers.size() > 0) {
@@ -32,49 +39,40 @@ public class InputReader {
                 List<String> numbersInFile = stream.collect(Collectors.toList());
                 result.addAll(numbersInFile);
             }
-            return result.stream();
         }
-        else if (this.getError().isPresent()) {
-            return Stream.empty();
-        }
-        else {
-            return this.readUserInput();
-        }
+        return result;
     }
 
-    public Stream<String> readUserInput() {
+     public void processStandardInput(EncodeService encode, AdviceService advice, InputStream inputStream)  {
         Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
-        List<String> userInput = new ArrayList<>();
 
         System.out.println(" ###### We are here to suggest! ######");
         System.out.println(" Please type a phone number and then hit return.");
-        System.out.println(" OR exit this application and provide phone numbers in a file.");
-        System.out.println(" You may supply multiple files for word suggestions.");
+        System.out.println(" OR exit this application and provide phone numbers in a file, file names should be passed in as arguments.");
+        System.out.println(" You may supply multiple files as arguments.");
         System.out.println(" EXIT: Press \"CTRL + D\" to exit.");
         System.out.println(" #####################################");
-        System.out.println();
 
         while (scanner.hasNext()) {
-            userInput.add(scanner.nextLine());
+            String phoneNumber = scanner.nextLine();
+            if (phoneNumber.matches(Util.PHONE_NUMBER_REGEX)) {
+                new ResultMapper().apply(phoneNumber).showResults(encode, advice);
+            }
+            else {
+                System.out.println(Error.BAD_PHONE_NUMBER.getText());
+            }
+
         }
-        return userInput.stream();
+       System.out.println("Thank you!!");
     }
 
-    public void readFileInput(final String filePath, final List<Stream<String>> result) {
+    public void readFromFile(final String filePath, final List<Stream<String>> result) {
         try {
             result.add(Files.lines(Paths.get(filePath)));
         } catch (IOException ex) {
             this.setError(Optional.of(Error.FILE_NOT_FOUND));
             System.out.println(Error.FILE_NOT_FOUND.getText() + filePath);
         }
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
-    }
-
-    public void setInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
     }
 
     public Optional<Error> getError() {
