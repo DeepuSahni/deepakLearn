@@ -5,11 +5,9 @@ import main.util.Util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -25,27 +23,39 @@ public class DictionaryLoader {
     private DictionaryLoader() {
     }
 
+    /**
+     * Load user dictionary if supplied otherwise load default default dictionary.
+     * Convert all words to upper case and return unique non blank words only.
+     * @return dictionary or empty set
+     */
     public static Set<String> getDictionary() {
-        return new TreeSet(DictionaryLoader.getDictionaryOrEmpty().collect(Collectors.toSet()));
-    }
-
-    public static Stream<String> getDictionaryOrEmpty() {
+        Stream<String> lines = Stream.of("");
+        Set<String> dictionary = new TreeSet<>();
+        BufferedReader bufferedReader = null;
         try {
-            Stream<String>  lines;
-            if (Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).isPresent()) {
-                lines = Files.lines(Paths.get(Optional.ofNullable(System.getProperty(DICTIONARY_OPTION)).get()));
+            if (System.getProperty(DICTIONARY_OPTION) != null) {
+                lines = Files.lines(Paths.get(System.getProperty(DICTIONARY_OPTION)));
+            } else {
+                bufferedReader = new BufferedReader(new InputStreamReader(DictionaryLoader.class.getResourceAsStream(DEFAULT_DICTIONARY)));
+                lines = bufferedReader.lines();
             }
-            else {
-                 lines = new BufferedReader(new InputStreamReader(DictionaryLoader.class.getResourceAsStream(DEFAULT_DICTIONARY))).lines();
-            }
-                   return  lines.map (word -> word.toUpperCase())
-                           .distinct()
-                           .map(word -> word.replaceAll(Util.NOT_AN_UPPER_CASE_REGEX, ""))
-                           .filter(word -> word.length() > 0);
+            dictionary = new TreeSet(lines.map(word -> word.toUpperCase()).distinct()
+                    .map(word -> word.replaceAll(Util.NOT_AN_UPPER_CASE_REGEX, ""))
+                    .filter(word -> word.length() > 0).collect(Collectors.toList()));
         } catch (IOException ex) {
             System.out.println(Error.DICTIONARY_NOT_FOUND.getText() + ex.getMessage());
-            return Stream.empty();
         }
+        finally {
+            try {
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+                lines.close();
+            }
+            catch (IOException ex) {
+                System.out.println(Error.FAILED_TO_CLOSE_STREAM.getText());
+            }
+        }
+        return dictionary;
     }
-
 }
