@@ -7,13 +7,17 @@
 - Java 8
 - Maven 3
 
+### Code Analysis
+- PMD
+- FindBug
+
 ### How To Build And Run
 1. Go into directory `suggest-words`
 2. `./build.sh`
 3. Run Application. 
 * Interactive mode: `java -jar target/suggest-1.0-RELEASE.jar`
-* Run with user dictionary: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar`
-* Run with input from files: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar sampleNumbers.txt`
+* With user dictionary: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar`
+* With file input: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar sampleNumbers.txt`
 
 ### Troubleshooting
 1. mvn: command not found?
