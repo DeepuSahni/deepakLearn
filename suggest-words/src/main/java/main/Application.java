@@ -60,6 +60,6 @@ public class Application {
         else if (!inputProcessor.getError().isPresent()){
             inputProcessor.processStandardInput(encode, advice, System.in);
         }
-        System.out.println("Thank you!!");
+        System.out.println("*** Thank you!! ****");
     }
 }
