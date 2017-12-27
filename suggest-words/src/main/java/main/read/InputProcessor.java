@@ -56,7 +56,10 @@ public class InputProcessor {
         System.out.println(" #####################################");
 
         while (scanner.hasNext()) {
-            new PhoneNumberMapper().apply(scanner.nextLine()).processPhoneNumber(encode, advice);
+            String phoneNumber = scanner.nextLine();
+            if (!phoneNumber.isEmpty()) {
+                new PhoneNumberMapper().apply(phoneNumber).processPhoneNumber(encode, advice);
+            }
         }
     }
 
