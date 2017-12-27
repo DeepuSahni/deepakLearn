@@ -1,18 +1,20 @@
-# Suggest Words For Number
+## Suggest Words For Number
 
-## Overview
+### Overview
 - A command line application that takes in phone numbers and prints dictionary word suggestions.
 
-## Technologies
+### Technologies
 - Java 8
 - Maven 3
 
-## How To Build And Run
+### How To Build And Run
 1. Go into directory `suggest-words`
 2. `./build.sh`
-3. `java -jar target/suggest-1.0-RELEASE.jar`
+3. Run in interactive mode: `java -jar target/suggest-1.0-RELEASE.jar`
+4. Run with user dictionary: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar`
+5. Run with input from files: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar sampleNumbers.txt`
 
-## Troubleshooting
+### Troubleshooting
 1. mvn: command not found?
   - Please install maven. Won't tell how :)
 2. Cannot clone. Git says host not found?
@@ -46,12 +48,12 @@
   </proxy>
   ```
   
-## IntelliJ : View Code 
+### IntelliJ : View Code 
 1. Click 'Import Project'
 2. Navigate to `pom.xml` in any of the projects.
 3. Click 'Open'
 4. Check 'Import Maven projects automatically'.
 5. Keep hitting 'Next' and then 'Finish'. 
 
-## Future Improvements
+### Future Improvements
 - Add feature: print application output to file. Will be handy for larger input files.
