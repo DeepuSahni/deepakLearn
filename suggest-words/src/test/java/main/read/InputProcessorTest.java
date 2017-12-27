@@ -26,9 +26,9 @@ import static org.testng.Assert.assertEquals;
 
 
 @Test
-public class InputReaderTest {
+public class InputProcessorTest {
     @Mock
-    private InputReader inputReader;
+    private InputProcessor inputProcessor;
 
     private static final String VALID_FILE = "testPhoneNumbers.txt";
 
@@ -46,28 +46,28 @@ public class InputReaderTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        inputReader = Mockito.spy(new InputReader());
+        inputProcessor = Mockito.spy(new InputProcessor());
     }
 
     public void given_validFileNameArg_when_process_then_returnsCorrectCountInFile() {
-        assertEquals(inputReader.readFileInput(Stream.of(VALID_FILE)).size(), 3);
+        assertEquals(inputProcessor.readFileInput(Stream.of(VALID_FILE)).size(), 3);
     }
 
     public void given_validFileNameArg_when_process_then_returnsSameNumbersInFile() {
-        List<String> allNumbers = inputReader.readFileInput(Stream.of(VALID_FILE));
+        List<String> allNumbers = inputProcessor.readFileInput(Stream.of(VALID_FILE));
         MatcherAssert.assertThat(allNumbers, containsInAnyOrder(expected.toArray()));
     }
 
     public void given_nonExistentFile_when_process_then_returnsNothing() {
-        List<String> allNumbers = inputReader.readFileInput(Stream.of("NO_SUCH_FILE"));
-        Mockito.verify(inputReader, Mockito.times(1)).readFromFile(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
-        assertEquals(inputReader.getError(), Optional.of(Error.FILE_NOT_FOUND));
+        List<String> allNumbers = inputProcessor.readFileInput(Stream.of("NO_SUCH_FILE"));
+        Mockito.verify(inputProcessor, Mockito.times(1)).readFromFile(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
+        assertEquals(inputProcessor.getError(), Optional.of(Error.FILE_NOT_FOUND));
         assertEquals(allNumbers.size(), 0);
     }
 
     public void given_mixedOfGoodBadFileArgs_when_process_then_readFromFileInput() {
-        List<String> allNumbers =  inputReader.readFileInput(Stream.of(VALID_FILE, "being sneaky"));
-        Mockito.verify(inputReader, Mockito.times(2)).readFromFile(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
+        List<String> allNumbers =  inputProcessor.readFileInput(Stream.of(VALID_FILE, "being sneaky"));
+        Mockito.verify(inputProcessor, Mockito.times(2)).readFromFile(ArgumentMatchers.anyString(), ArgumentMatchers.any(List.class));
         MatcherAssert.assertThat(allNumbers, containsInAnyOrder(expected.toArray()));
     }
 }

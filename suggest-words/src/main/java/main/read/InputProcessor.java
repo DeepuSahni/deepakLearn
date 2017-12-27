@@ -2,7 +2,8 @@ package main.read;
 
 import main.advice.AdviceService;
 import main.encode.EncodeService;
-import main.result.ResultMapper;
+import main.result.PhoneNumberMapper;
+import main.result.PhoneNumberSanitiser;
 import main.util.Error;
 import main.util.Util;
 
@@ -23,10 +24,10 @@ import java.util.stream.Stream;
  * If valid files are supplied as arguments we will read from them.
  * If no file args is supplied then we will read from standard input.
  */
-public class InputReader {
+public class InputProcessor {
     private Optional<Error> error = Optional.ofNullable(null);
 
-    public InputReader() {
+    public InputProcessor() {
     }
 
     public List<String> readFileInput(final Stream<String> args) {
@@ -50,20 +51,13 @@ public class InputReader {
         System.out.println(" Please type a phone number and then hit return.");
         System.out.println(" OR exit this application and provide phone numbers in a file, file names should be passed in as arguments.");
         System.out.println(" You may supply multiple files as arguments.");
+         System.out.println(" Empty output will print when application cannot find any suggestions for the number.");
         System.out.println(" EXIT: Press \"CTRL + D\" to exit.");
         System.out.println(" #####################################");
 
         while (scanner.hasNext()) {
-            String phoneNumber = scanner.nextLine();
-            if (phoneNumber.matches(Util.PHONE_NUMBER_REGEX)) {
-                new ResultMapper().apply(phoneNumber).showResults(encode, advice);
-            }
-            else {
-                System.out.println(Error.BAD_PHONE_NUMBER.getText());
-            }
-
+            new PhoneNumberMapper().apply(scanner.nextLine()).processPhoneNumber(encode, advice);
         }
-       System.out.println("Thank you!!");
     }
 
     public void readFromFile(final String filePath, final List<Stream<String>> result) {

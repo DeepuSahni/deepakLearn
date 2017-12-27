@@ -34,7 +34,7 @@ public class EncodeService {
          if (Util.isBlank(phoneNumber)) {
              return Stream.empty();
          }
-         List<List<String>> allDigitsMappedToLetters = this.mapDigitsToLetters(phoneNumber.replaceAll(Util.NOT_NUMBER_REGEX, ""));
+         List<List<String>> allDigitsMappedToLetters = this.mapDigitsToLetters(phoneNumber);
 
          if (allDigitsMappedToLetters == null) {
              return Stream.empty();
@@ -56,7 +56,7 @@ public class EncodeService {
         for (List<String> memberList : parentList.subList(1, parentList.size())) {
             for (int index = 0; memberList!=null && index < memberList.size(); index++) {
                 for (String baseMember : base) {
-                    intermediate.add(baseMember.concat(memberList.get(index)));
+                    intermediate.add(new StringBuilder(baseMember).append(memberList.get(index)).toString());
                 }
             }
             if (intermediate.size() > 0) {

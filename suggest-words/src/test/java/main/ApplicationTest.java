@@ -35,6 +35,7 @@ public class ApplicationTest {
         args = new String[] {VALID_FILE};
     }
 
+    // This test also runs the end to end flow. The file passed in arguments is processed and suggestions are printed.
     public void given_defaultDictionaryIsSet_when_run_then_runApplication() {
         application.startApplication(args);
         Mockito.verify(application, Mockito.times(1)).runApplication(args, defaultDictionary);

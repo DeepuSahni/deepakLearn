@@ -9,7 +9,8 @@ public class Util {
     public static final String NOT_NUMBER_REGEX = "[^0-9]+";
     public static final String NOT_AN_UPPER_CASE_REGEX = "[^A-Z]+";
     public static final String COMMA_SEPARATOR = " , ";
-    public static final String PHONE_NUMBER_REGEX = "[-.( ]*[0-9]+[-,\\.() ]*";
+    public static final String MIN_ONE_DIGIT_REGEX = ".*[0-9]+.*";
+    public static final String HAS_A_LETTER_REGEX = ".*[a-zA-Z]+.*";
     public static boolean isEmpty(String[] array){
         if (array !=null && array.length > 0) {
             return false;

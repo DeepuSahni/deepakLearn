@@ -17,28 +17,26 @@ import java.util.stream.Collectors;
  * Should take in encoded words and return matches if any.
  */
 public class AdviceService {
-    private Set<String> dictionary;
-
-    AdviceService() {
-    }
+    private final Set<String> dictionary;
+    private static final String AT_LEAST_ONE_DIGIT_REGEX = ".*\\d+.*";
 
     public AdviceService(Set<String> dictionary) {
         this.dictionary = dictionary;
     }
 
     public List<String> getSuggestionsForWord(final String word) {
-        List<List<String>> wordBrokenIntoDictionaryWords = new ArrayList<>();
         List<String> suggestions = new ArrayList<>();
-        String[] splitWordWithNumbers = word.split("((?<=[0-9])|(?=[0-9]))");
+        List<List<String>> wordBrokenIntoDictionaryWords = new ArrayList<>();
+        String[] splitWord = word.split("((?<=[0-9])|(?=[0-9]))");
 
-        for (int i = 0; i < splitWordWithNumbers.length; i++) {
-            if (splitWordWithNumbers[i].matches("[0-9]")){
+        for (int i = 0; i < splitWord.length; i++) {
+            if (splitWord[i].matches("[0-9]")){
                 // Add the digit as it is.
-                wordBrokenIntoDictionaryWords.add(new LinkedList<>(Arrays.asList("-" + splitWordWithNumbers[i] + "-")));
+                wordBrokenIntoDictionaryWords.add(new LinkedList<>(Arrays.asList("-" + splitWord[i] + "-")));
             }
             else {
                 // Get dictionary words within a word.
-                List<String> dictionaryWords = this.breakWordIntoDictionaryWords(splitWordWithNumbers[i]);
+                List<String> dictionaryWords = this.breakWordIntoDictionaryWords(splitWord[i]);
                 if (Util.isNotEmpty(dictionaryWords)){
                     wordBrokenIntoDictionaryWords.add(dictionaryWords);
                 }
@@ -53,7 +51,7 @@ public class AdviceService {
 
     private List<String> getValidSuggestions(final String word, final List<List<String>> wordBrokenIntoDictionaryWords) {
         List<String> suggestions;
-        if (word.matches(".*\\d+.*")) {
+        if (word.matches(AT_LEAST_ONE_DIGIT_REGEX)) {
             // Re-Write the word using letters and numbers.
             List<String> baseLetterSet = new LinkedList<>();
             baseLetterSet.addAll(wordBrokenIntoDictionaryWords.get(0));

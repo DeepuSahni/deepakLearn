@@ -23,13 +23,8 @@ public class EncodeServiceTest {
         Assert.assertTrue(encodedStream.anyMatch(encoded -> encoded.equalsIgnoreCase("CALLME")));
     }
 
-    public void given_multipleDigitsWithPunctuation_when_encode_then_ignorePunctuation() {
-        Stream<String> encodedStream = service.encode("(225)56 .3");
-        Assert.assertTrue(encodedStream.anyMatch(encoded -> encoded.equalsIgnoreCase("CALLME")));
-    }
-
     public void given_allDigitsNotInEncodingDictionary_when_encode_then_ignoreNumber() {
-        Stream<String> encodedStream = service.encode("111.111");
+        Stream<String> encodedStream = service.encode("111111");
         Assert.assertEquals(encodedStream.count(), 0);
     }
 

@@ -4,8 +4,8 @@ import main.advice.AdviceService;
 import main.dictionary.DictionaryLoader;
 import main.encode.EncodeService;
 import main.parse.ArgumentParser;
-import main.read.InputReader;
-import main.result.ResultMapper;
+import main.read.InputProcessor;
+import main.result.PhoneNumberMapper;
 import main.util.Error;
 import main.util.Util;
 
@@ -49,18 +49,17 @@ public class Application {
     public void runApplication(final String[] args, final  Set<String> dictionary) {
         AdviceService advice = new AdviceService(dictionary);
         EncodeService encode = new EncodeService();
-        InputReader inputReader = new InputReader();
-        List<String> numbersInFiles = inputReader.readFileInput(ArgumentParser.parseArguments(args));
+        InputProcessor inputProcessor = new InputProcessor();
+        List<String> numbersInFiles = inputProcessor.readFileInput(ArgumentParser.parseArguments(args));
 
         if (Util.isNotEmpty(numbersInFiles)) {
             numbersInFiles.stream()
-                    .filter(number -> number.matches(Util.PHONE_NUMBER_REGEX))
-                    .map(new ResultMapper())
-                    .forEach(result -> result.showResults(encode, advice));
+                    .map(new PhoneNumberMapper())
+                    .forEach(numberProcessor -> numberProcessor.processPhoneNumber(encode, advice));
         }
-        else if (!inputReader.getError().isPresent()){
-            inputReader.processStandardInput(encode, advice, System.in);
+        else if (!inputProcessor.getError().isPresent()){
+            inputProcessor.processStandardInput(encode, advice, System.in);
         }
-
+        System.out.println("Thank you!!");
     }
 }
