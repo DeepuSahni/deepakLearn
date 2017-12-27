@@ -13,10 +13,9 @@ import java.util.List;
  */
 public class PhoneNumberProcessor {
     private String phoneNumber;
-    private StringBuilder suggestion;
+    private StringBuilder suggestion = new StringBuilder();
 
     public void processPhoneNumber(final EncodeService encodeService, final AdviceService adviceService) {
-        suggestion = new StringBuilder();
         if (PhoneNumberSanitiser.getSanitisedPhoneNumber(phoneNumber).isPresent()) {
             suggestion.append(phoneNumber).append(Util.COMMA_SEPARATOR);
             encodeService.encode(phoneNumber).forEach(encodedNumber -> getSuggestions(encodedNumber, adviceService));
