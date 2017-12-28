@@ -12,8 +12,7 @@
 - FindBug
 
 ### How To Build And Run
-1. Go into directory `suggest-words`
-2. `./build.sh`
+1. Build `./build.sh`
 3. Run Application. 
 * Interactive mode: `java -jar target/suggest-1.0-RELEASE.jar`
 * With user dictionary: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar`
