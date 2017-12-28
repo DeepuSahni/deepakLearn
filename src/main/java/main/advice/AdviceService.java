@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +31,7 @@ public class AdviceService {
         for (int i = 0; i < splitWord.length; i++) {
             if (splitWord[i].matches("[0-9]")){
                 // Add the digit as it is.
-                wordBrokenIntoDictionaryWords.add(new LinkedList<>(Arrays.asList("-" + splitWord[i] + "-")));
+                wordBrokenIntoDictionaryWords.add(new ArrayList<>(Arrays.asList("-" + splitWord[i] + "-")));
             }
             else {
                 // Get dictionary words within a word.
@@ -53,10 +52,7 @@ public class AdviceService {
         List<String> suggestions;
         if (word.matches(AT_LEAST_ONE_DIGIT_REGEX)) {
             // Re-Write the word using letters and numbers.
-            List<String> baseLetterSet = new LinkedList<>();
-            baseLetterSet.addAll(wordBrokenIntoDictionaryWords.get(0));
-            List<String> cartesianProduct = this.getCartesianProduct(baseLetterSet, wordBrokenIntoDictionaryWords);
-            suggestions = cartesianProduct.stream()
+            suggestions = Util.getCartesianProduct(wordBrokenIntoDictionaryWords).stream()
                     .filter(result -> result.length() == (word.length() + result.codePoints().filter(dash -> dash == '-').count()))
                     .collect(Collectors.toList());
         }
@@ -68,29 +64,10 @@ public class AdviceService {
         }
         return suggestions;
     }
-    
-
-    private List<String> getCartesianProduct(final List<String> base, final List<List<String>> parentList) {
-        List<String> intermediate = new LinkedList<>();
-        for (List<String> memberList : parentList.subList(1, parentList.size())) {
-            for (int index = 0; memberList != null && index < memberList.size(); index++) {
-                for (String baseElement : base) {
-                    intermediate.add(baseElement.concat(memberList.get(index)));
-                }
-            }
-            if (intermediate.size() > 0) {
-                base.clear();
-                base.addAll(intermediate);
-                intermediate.clear();
-            }
-        }
-        return base;
-    }
-
 
     private List<String> breakWordIntoDictionaryWords(final String word) {
         if (word.length() < 2 || dictionary.contains(word)) {
-            return new LinkedList<>(Arrays.asList(word));
+            return new ArrayList<>(Arrays.asList(word));
         }
 
         List<String> brokenIntoDictionaryWords = new ArrayList<>();

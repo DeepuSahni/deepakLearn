@@ -3,9 +3,9 @@ package main.encode;
 import main.util.Util;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -43,31 +43,10 @@ public class EncodeService {
                  return allDigitsMappedToLetters.get(0).stream();
          }
          else if (allDigitsMappedToLetters.size() > 1) {
-             return getCartesianProduct(allDigitsMappedToLetters).stream();
+             return Util.getCartesianProduct(allDigitsMappedToLetters).stream();
          }
         return Stream.empty();
     }
-
-    private List<String> getCartesianProduct(final List<List<String>> parentList ) {
-        List<String> base = new LinkedList<>();
-        base.addAll(parentList.get(0));
-
-        List<String> intermediate = new LinkedList<>();
-        for (List<String> memberList : parentList.subList(1, parentList.size())) {
-            for (int index = 0; memberList!=null && index < memberList.size(); index++) {
-                for (String baseMember : base) {
-                    intermediate.add(new StringBuilder(baseMember).append(memberList.get(index)).toString());
-                }
-            }
-            if (intermediate.size() > 0) {
-                base.clear();
-                base.addAll(intermediate);
-                intermediate.clear();
-            }
-        }
-        return base;
-    }
-
 
     /**
      * 1. For each digit of phone number, look into <code>encodingMap</code> to find matching letter set.
@@ -78,13 +57,13 @@ public class EncodeService {
      * @return all digits changed to letters or null if 2 consecutive digits could not be changed.
      */
     private List<List<String>> mapDigitsToLetters(final String phoneNumber) {
-        List<List<String>> allDigitsMappedToLetters = new LinkedList<>();
+        List<List<String>> allDigitsMappedToLetters = new ArrayList<>();
         boolean previousDigitIgnored = false;
         for (char digit : phoneNumber.toCharArray()) {
             String[] lettersForNumber = encodingMap.get(String.valueOf(digit));
             if (lettersForNumber != null) {
                 previousDigitIgnored = false;
-                allDigitsMappedToLetters.add(new LinkedList<>(Arrays.asList(lettersForNumber)));
+                allDigitsMappedToLetters.add(new ArrayList<>(Arrays.asList(lettersForNumber)));
             }
             else {
                 if(previousDigitIgnored) {
@@ -92,7 +71,7 @@ public class EncodeService {
                 }
                 previousDigitIgnored = true;
                 // 1 digit can stay un-changed.
-                allDigitsMappedToLetters.add(new LinkedList<>(Arrays.asList(String.valueOf(digit))));
+                allDigitsMappedToLetters.add(new ArrayList<>(Arrays.asList(String.valueOf(digit))));
             }
         }
         return allDigitsMappedToLetters;

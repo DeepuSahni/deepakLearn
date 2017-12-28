@@ -1,5 +1,6 @@
 package main.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Util {
@@ -11,24 +12,6 @@ public class Util {
     public static final String COMMA_SEPARATOR = " , ";
     public static final String MIN_ONE_DIGIT_REGEX = ".*[0-9]+.*";
     public static final String HAS_A_LETTER_REGEX = ".*[a-zA-Z]+.*";
-    public static boolean isEmpty(String[] array){
-        if (array !=null && array.length > 0) {
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean isNotEmpty(String[] array){
-        return ! (isEmpty(array));
-    }
-
-    public static boolean isEmpty(String str) {
-        return str == null || str.length() == 0;
-    }
-
-    public static boolean isNotEmpty(String str) {
-        return !isEmpty(str);
-    }
 
     public static boolean isBlank(String str) {
         int strLen;
@@ -55,4 +38,33 @@ public class Util {
         return ! (isEmpty(list));
     }
 
+    public static boolean isListEmpty(final List<List<String>> list){
+        if (list !=null && list.size() > 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public static List<String> getCartesianProduct(final List<List<String>> parentList ) {
+        if (isListEmpty(parentList)) {
+           return new ArrayList<>();
+        }
+        List<String> base = new ArrayList<>();
+        base.addAll(parentList.get(0));
+
+        List<String> intermediate = new ArrayList<>();
+        for (List<String> remainingList : parentList.subList(1, parentList.size())) {
+            for (int index = 0; remainingList != null && index < remainingList.size(); index++) {
+                for (String baseMember : base) {
+                    intermediate.add(new StringBuilder(baseMember).append(remainingList.get(index)).toString());
+                }
+            }
+            if (intermediate.size() > 0) {
+                base.clear();
+                base.addAll(intermediate);
+                intermediate.clear();
+            }
+        }
+        return base;
+    }
 }

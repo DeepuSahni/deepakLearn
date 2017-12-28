@@ -1,19 +1,15 @@
 package main.result;
 
-import main.Application;
 import main.advice.AdviceService;
 import main.dictionary.DictionaryLoader;
 import main.encode.EncodeService;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Set;
-
-import static org.testng.Assert.*;
 
 public class PhoneNumberProcessorTest {
     private Set<String> defaultDictionary;
