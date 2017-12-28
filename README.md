@@ -11,9 +11,10 @@
 - PMD
 - FindBug
 
-### How To Build And Run
-1. Build `./build.sh`
-3. Run Application. 
+### Build And Run
+1. Clone: `git clone https://github.com/DeepuSahni/suggest-me.git`
+1. Build: `./build.sh`
+3. Run: 
 * Interactive mode: `java -jar target/suggest-1.0-RELEASE.jar`
 * With user dictionary: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar`
 * With file input: `java -Ddictionary=userDictionary.txt -jar target/suggest-1.0-RELEASE.jar sampleNumbers.txt`
