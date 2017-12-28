@@ -55,7 +55,7 @@
   
 ### IntelliJ : View Code 
 1. Click 'Import Project'
-2. Navigate to `pom.xml` in any of the projects.
+2. Navigate to `pom.xml`
 3. Click 'Open'
 4. Check 'Import Maven projects automatically'.
 5. Keep hitting 'Next' and then 'Finish'. 
