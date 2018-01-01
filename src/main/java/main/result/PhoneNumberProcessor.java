@@ -5,6 +5,7 @@ import main.encode.EncodeService;
 import main.util.Error;
 import main.util.Util;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -16,9 +17,10 @@ public class PhoneNumberProcessor {
     private StringBuilder suggestion = new StringBuilder();
 
     public void processPhoneNumber(final EncodeService encodeService, final AdviceService adviceService) {
-        if (PhoneNumberSanitiser.getSanitisedPhoneNumber(phoneNumber).isPresent()) {
+        Optional<String> sanitisedNumber = PhoneNumberSanitiser.getSanitisedPhoneNumber(phoneNumber);
+        if (sanitisedNumber.isPresent()) {
             suggestion.append(phoneNumber).append(Util.COMMA_SEPARATOR);
-            encodeService.encode(phoneNumber).forEach(encodedNumber -> getSuggestions(encodedNumber, adviceService));
+            encodeService.encode(sanitisedNumber.get()).forEach(encodedNumber -> getSuggestions(encodedNumber, adviceService));
         }
         else {
             suggestion.append(Error.BAD_PHONE_NUMBER.getText());
