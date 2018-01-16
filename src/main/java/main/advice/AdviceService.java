@@ -79,8 +79,8 @@ public class AdviceService {
             return allPossibleWords.get(0);
         }
         // Re-write the original word using all possible words
-        List<String> reWrittenWord = this.reWriteWordFromAllPossibleWords(word, allPossibleWords);
-        brokenIntoDictionaryWords = reWrittenWord.stream()
+        List<String> reWrittenWords = this.reWriteWordFromAllPossibleWords(word, allPossibleWords);
+        brokenIntoDictionaryWords = reWrittenWords.stream()
                 .filter(result -> result.length() == (word.length() + result.codePoints().filter(ch -> ch == '-').count()))
                 .distinct()
                 .collect(Collectors.toList());
