@@ -29,9 +29,8 @@ public class PhoneNumberProcessor {
     }
 
     public void getSuggestions(final String encodedNumber, final AdviceService adviceService) {
-            List<String> results = adviceService.getSuggestionsForWord(encodedNumber);
-            if (results.size() > 0) {
-                suggestion.append(results.toString());
+            for (String result : adviceService.getSuggestionsForWord(encodedNumber)) {
+                suggestion.append(result).append(" | ");
             }
     }
 
